@@ -116,7 +116,6 @@ public class CasterMainFrame extends javax.swing.JFrame {
         }
         this.ErinnHourLabel.setText(Integer.toString(ehour));
         this.ErinnMinuteLabel.setText(zero + Integer.toString(eminute));
-        this.testlabel.setText(CDM.GetGameTime());
 
 
         DefaultTableModel dtm = (DefaultTableModel) AlarmClockTable.getModel();
@@ -252,8 +251,6 @@ public class CasterMainFrame extends javax.swing.JFrame {
 
     private void NewWindowMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_NewWindowMenuItemActionPerformed
         String s = null;
-        boolean scram = true;
-        do {
             s = (String) JOptionPane.showInputDialog(
                     this,
                     "Please select a tool",
@@ -262,8 +259,7 @@ public class CasterMainFrame extends javax.swing.JFrame {
                     null,
                     enabledtools,
                     enabledtools[0]);
-            scram = (s == null);
-        } while (scram);
+        if(s == null) return;
         if (s.contentEquals("Moongate Tool")) {
             makeMoongateTool();
         }
