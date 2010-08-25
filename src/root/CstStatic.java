@@ -16,6 +16,7 @@ public class CstStatic {
 
     	public static final long ERINN_HOUR = 90 * 1000;
 	public static final long ERINN_MINUTE = 1500;
+        public static final long ERINN_SECOND = 25;
 	public static final long ERINN_DAY = 36 * 60 * 1000; //36 minutes.
         public static final long IRL_HOUR = 3600 * 1000; //3600 sec/hour.
         public static final long IRL_MINUTE = 60 * 1000; //60 sec/minute.

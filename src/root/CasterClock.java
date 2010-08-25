@@ -97,6 +97,11 @@ public class CasterClock {
 		return (int) (java.lang.Math.floor(new Double(getOffsetTime() / CstStatic.ERINN_MINUTE).doubleValue()) % 60);
 	}
 
+        public int getErinnSecond()
+        {
+            return (int) (java.lang.Math.floor(new Double(getOffsetTime()/ CstStatic.ERINN_SECOND).doubleValue()) % 60);
+        }
+
         public int getLocalHour()
         {
             return (int) (java.lang.Math.floor(new Double(getLocalTime() / CstStatic.IRL_HOUR).doubleValue()) % 24);

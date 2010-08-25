@@ -16,9 +16,20 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Properties;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javax.sound.sampled.AudioFormat;
+import javax.sound.sampled.AudioInputStream;
+import javax.sound.sampled.AudioSystem;
+import javax.sound.sampled.DataLine;
+import javax.sound.sampled.LineUnavailableException;
+import javax.sound.sampled.SourceDataLine;
+import javax.sound.sampled.UnsupportedAudioFileException;
 import javax.swing.DefaultCellEditor;
 import javax.swing.JComboBox;
 import javax.swing.JFrame;
@@ -52,6 +63,10 @@ public class CasterMainFrame extends javax.swing.JFrame {
     JComboBox prycecombo;
     JComboBox ruacombo;
 
+    AudioInputStream ais;
+    AudioFormat audioformat;
+    SourceDataLine sourceDataLine;
+
     public CasterMainFrame(CasterClock c, Properties props) {
         initComponents();
         internalClock = c;
@@ -59,7 +74,7 @@ public class CasterMainFrame extends javax.swing.JFrame {
         enabledtools = CstStatic.parseStrArray(props.getProperty("enabledtools")).toArray(new String[0]);
         CDM = new CasterDataModel(props);
         TickAction t = new TickAction();
-        new Timer(500, t).start();
+        new Timer((int) CstStatic.IRL_SECOND, t).start();
 
         AlarmTypeColumn = AlarmClockTable.getColumnModel().getColumn(1);
         ((DefaultTableModel) AlarmClockTable.getModel()).addRow(new String[]{"", "", ""});
@@ -125,23 +140,27 @@ public class CasterMainFrame extends javax.swing.JFrame {
             String localtime = internalClock.getLocalHour() + ((internalClock.getLocalMinute() < 10) ? ":0" : ":") + internalClock.getLocalMinute();
             String erinntime = internalClock.getErinnHour() + ((internalClock.getErinnMinute() < 10) ? ":0" : ":") + internalClock.getErinnMinute();
             //[Local Time, Erinn Time, Moongate, Pryce, Rua]
+            //System.out.println(internalClock.getServerSecond());
             if (cell.contentEquals("Local Time")) { //both cell types use the same editor
-
-                //System.out.println(dtm.getValueAt(rowindex, 2) + " " + internalClock);
-                if (((String) dtm.getValueAt(rowindex, 2)).contentEquals(localtime) && internalClock.getServerSecond() < 3) {
-                    Toolkit.getDefaultToolkit().beep();
+                if (((String) dtm.getValueAt(rowindex, 2)).contentEquals(localtime) && internalClock.getServerSecond() < 1) {//4 rings
+                    playAlarm();
                     //System.out.println("whoo");
                 }
             }
+            //System.out.println(internalClock.getErinnSecond());
             if (cell.contentEquals("Erinn Time")) { //both cell types use the same editor
-                if (((String) dtm.getValueAt(rowindex, 2)).contentEquals(erinntime)) {
-                    Toolkit.getDefaultToolkit().beep();
+                if (((String) dtm.getValueAt(rowindex, 2)).contentEquals(erinntime) && internalClock.getErinnSecond() < 30) { //Some mathematical nonsense I don't get.
+                    //Toolkit.getDefaultToolkit().beep();
+                    playAlarm();
+                    System.out.println("gogogo!");
                     //System.out.println(dtm.getValueAt(rowindex, 2) + " " + ((String) dtm.getValueAt(rowindex, 2)).contentEquals(CDM.GetGameTime()) +  " " + CDM.GetGameTime());
 
                 }
             }
+//            if(cell.contentEquals("Moongate"))
+//            System.out.println(erinntime + dtm.getValueAt(rowindex, 2));
             if (cell.contentEquals("Moongate") && erinntime.contentEquals("18:00") && CDM.isCurrentMoongate((String) dtm.getValueAt(rowindex, 2))) {
-                Toolkit.getDefaultToolkit().beep();
+                playAlarm();
             }
             if (cell.contentEquals("Pryce") && erinntime.contentEquals("0:00") && CDM.isCurrentPryce((String) dtm.getValueAt(rowindex, 2))) {
                 Toolkit.getDefaultToolkit().beep();
@@ -401,6 +420,69 @@ public class CasterMainFrame extends javax.swing.JFrame {
             }
         }
     }
+
+    //Copyright 2003 Internet.com All rights reserved. Reprinted with permission from http://www.internet.com.
+    //http://www.developer.com/java/other/article.php/2173111/Java-Sound-Playing-Back-Audio-Files-using-Java.htm
+    public void playAlarm()
+    {
+        try
+        {
+            File soundfile = new File("knocking.wav");
+            ais = AudioSystem.getAudioInputStream(soundfile);
+            audioformat = ais.getFormat();
+            DataLine.Info dataLineInfo =
+                          new DataLine.Info(
+                            SourceDataLine.class,
+                                    audioformat);
+            sourceDataLine =
+             (SourceDataLine)AudioSystem.getLine(
+                                   dataLineInfo);
+            new PlayThread().start();
+
+        }
+        catch (LineUnavailableException ex) {
+            Logger.getLogger(CasterMainFrame.class.getName()).log(Level.SEVERE, null, ex);
+        }        catch (UnsupportedAudioFileException ex) {
+            Logger.getLogger(CasterMainFrame.class.getName()).log(Level.SEVERE, null, ex);
+        }        catch (IOException ex) {
+            Logger.getLogger(CasterMainFrame.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+
+    //=============================================//
+//Inner class to play back the data from the
+// audio file.
+// Code from http://www.developer.com/java/other/article.php/2173111/Java-Sound-Playing-Back-Audio-Files-using-Java.htm
+// What, you expect me to pull out how to do audio operations in Java out of a hat?
+// Copyright 2003 Internet.com All rights reserved. Reprinted with permission from http://www.internet.com.
+class PlayThread extends Thread{
+  byte tempBuffer[] = new byte[10000];
+
+  public void run(){
+    try{
+      sourceDataLine.open(audioformat);
+      sourceDataLine.start();
+
+      int cnt;
+      while((cnt = ais.read(
+           tempBuffer,0,tempBuffer.length)) != -1){
+        if(cnt > 0){
+          sourceDataLine.write(
+                             tempBuffer, 0, cnt);
+        }//end if
+      }//end while
+      //Block and wait for internal buffer of the
+      // data line to empty.
+      sourceDataLine.drain();
+      sourceDataLine.close();
+    }catch (Exception e) {
+      e.printStackTrace();
+      System.exit(1);
+    }//end catch
+  }//end run
+}//end inner class PlayThread
+//===================================//
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JTable AlarmClockTable;
     private javax.swing.JLabel ErinnHourLabel;
