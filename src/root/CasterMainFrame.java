@@ -1,7 +1,9 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
+    /*
+     * Bjorn Carandang
+     * bac37@drexel.edu
+     * CS338:GUI, Assignment [P3]
+     */
+
 
 /*
  * MainCaster.java
@@ -18,7 +20,6 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.io.File;
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Properties;
 import java.util.logging.Level;
@@ -44,9 +45,8 @@ import javax.swing.event.TableModelListener;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableColumn;
 
-/**
- *
- * @author Administrator
+/*
+ * Main frame for the Caster, and also manages the AlarmClock.
  */
 public class CasterMainFrame extends javax.swing.JFrame {
 
@@ -63,6 +63,7 @@ public class CasterMainFrame extends javax.swing.JFrame {
     JComboBox prycecombo;
     JComboBox ruacombo;
 
+    //For the Alarm Clock
     AudioInputStream ais;
     AudioFormat audioformat;
     SourceDataLine sourceDataLine;
@@ -85,6 +86,7 @@ public class CasterMainFrame extends javax.swing.JFrame {
                 enabledalarms);
         AlarmTypeColumn.setCellEditor(new DefaultCellEditor(AlarmTypeCombo));
 
+        //Constructing the popup menu that lets me add/remove alarm rows.
         deletepopup = new JPopupMenu();
         JMenuItem delitem = new JMenuItem("Delete");
         JMenuItem additem = new JMenuItem("Add Alarm");
@@ -111,8 +113,9 @@ public class CasterMainFrame extends javax.swing.JFrame {
         AlarmClockTable.getModel().addTableModelListener(new CasterAlarmTableModelListener());
         AlarmClockTable.addMouseListener(new PopupListener());
 
-        moongatecombo = new JComboBox((String[]) CstStatic.parseStrArray((String) props.get("moongatenames")).toArray(new String[0]));
-        prycecombo = new JComboBox((String[]) CstStatic.parseStrArray((String) props.get("pricenames")).toArray(new String[0]));
+        //Creating the ComboBoxes we need. for editors.
+        moongatecombo = new JComboBox(CDM.getMoongateList());
+        prycecombo = new JComboBox(CDM.getPryceList());
         ruacombo = new JComboBox(CDM.getRuaList());
 
     }
@@ -123,16 +126,22 @@ public class CasterMainFrame extends javax.swing.JFrame {
         throw new UnsupportedOperationException("Cannot create Frame w/o clock");
     }
 
+    /*
+     * Does the musclework for sounding alarms and updating the clock
+     * label. Is called every second.
+     */
     public void update(
             int ehour, int eminute) {
         String zero = "0";
-        if (eminute > 10) {
+        if (eminute >= 10) {
             zero = "";
         }
+        //Set the time labels.
         this.ErinnHourLabel.setText(Integer.toString(ehour));
         this.ErinnMinuteLabel.setText(zero + Integer.toString(eminute));
 
-
+        //Go through each row in the table and decide if we need to sound
+        //the alarm for that row.
         DefaultTableModel dtm = (DefaultTableModel) AlarmClockTable.getModel();
         for (int rowindex = 0; rowindex < dtm.getRowCount(); rowindex++) {
             //System.out.println("whoo");
@@ -163,10 +172,10 @@ public class CasterMainFrame extends javax.swing.JFrame {
                 playAlarm();
             }
             if (cell.contentEquals("Pryce") && erinntime.contentEquals("0:00") && CDM.isCurrentPryce((String) dtm.getValueAt(rowindex, 2))) {
-                Toolkit.getDefaultToolkit().beep();
+                playAlarm();
             }
             if (cell.contentEquals("Rua") && erinntime.contentEquals("18:00") && CDM.isCurrentRua((String) dtm.getValueAt(rowindex, 2))) {
-                Toolkit.getDefaultToolkit().beep();
+                playAlarm();
             }
 
         }
@@ -278,7 +287,10 @@ public class CasterMainFrame extends javax.swing.JFrame {
                     null,
                     enabledtools,
                     enabledtools[0]);
+        //If we selected "Cancel" or something where we don't get an option,
+        //let's just get out of here.
         if(s == null) return;
+        //Otherwise, choose the window.
         if (s.contentEquals("Moongate Tool")) {
             makeMoongateTool();
         }
@@ -294,6 +306,9 @@ public class CasterMainFrame extends javax.swing.JFrame {
 
 }//GEN-LAST:event_NewWindowMenuItemActionPerformed
 
+    /*
+     * Making the windows that we need.
+     */
     private void makePryceTool() {
         JFrame pryceframe = new JFrame("Pryce Tool");
         CasterPrycePanel pp = new CasterPrycePanel(CDM);
@@ -338,6 +353,10 @@ public class CasterMainFrame extends javax.swing.JFrame {
         ruaframe.setVisible(true);
     }
 
+    /*
+     * Whenever the Timer up top ticks, we make the
+     * Erinn time clock update its state.
+     */
     public class TickAction implements ActionListener {
 
         @Override
@@ -384,12 +403,15 @@ public class CasterMainFrame extends javax.swing.JFrame {
                 return; //I don't want to deal with a deletion?
             } else if (e.getColumn() == 1) //The alarm type combo
             {
+                //Get the row index, the data model of the Table, and the table itself.
                 int rowindex = e.getFirstRow();
                 DefaultTableModel dtm = (DefaultTableModel) AlarmClockTable.getModel();
                 String cell = (String) dtm.getValueAt(rowindex, e.getColumn());
 //                System.out.println(cell);
                 //[Local Time, Erinn Time, Moongate, Pryce, Rua]
                 CasterAlarmClockTable cact = (CasterAlarmClockTable) AlarmClockTable;
+
+                //Setting cell editors, given the preceding row isn't blank/unset.
                 if (cell.contentEquals("Local Time") || cell.contentEquals("Erinn Time")) { //both cell types use the same editor
                     if (cact.getCellEditor(rowindex, 2) instanceof DateSpinnerCellEditor) {//do nothing
                     } else {

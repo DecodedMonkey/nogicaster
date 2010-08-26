@@ -1,11 +1,20 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
+    /*
+     * Bjorn Carandang
+     * bac37@drexel.edu
+     * CS338:GUI, Assignment [P3]
+     */
 package root;
 
 import java.util.*;
 import javax.swing.table.*;
+
+/*
+ * Manages most of the special calculations that we need to do.
+ * Can handle a little bit of time operations, but isn't nearly
+ * as fast on the uptake as the CasterClock, so repeated pings
+ * result in stagnant data... for some reason. Better for calculating
+ * the times for events.
+ */
 
 public class CasterDataModel {
 
@@ -56,6 +65,13 @@ public class CasterDataModel {
         return serverDateTime.get(Calendar.HOUR_OF_DAY) + ((serverDateTime.get(Calendar.MINUTE) < 10) ? ":0" : ":") + serverDateTime.get(Calendar.MINUTE);
     }
 
+
+    /**
+     * Since for the most part we refresh the data model whenever we add/sub
+     * a new row, I figured convenience functions to make us the TableModels
+     * would make things easier.
+     * 
+     */
     public DefaultTableModel GetMoongateDefaultTableModel() {
         DefaultTableModel datamodel = new DefaultTableModel();
 
@@ -221,6 +237,10 @@ public class CasterDataModel {
     }
 
     public CasterDataModel(Properties props) {
+        if(this.localDateTime.getTimeZone().inDaylightTime(new Date()))
+        this.serverDateTime = Calendar.getInstance(TimeZone.getTimeZone("GMT-7"));
+        else Calendar.getInstance(TimeZone.getTimeZone("GMT-8")); //Dynamically take care of PST/PDT.
+
         this.moonGateEpoch = Long.parseLong(props.getProperty("gateepoch"));
         this.pryceEpoch = Long.parseLong(props.getProperty("priceepoch"));
 

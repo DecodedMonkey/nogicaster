@@ -1,7 +1,8 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
+    /*
+     * Bjorn Carandang
+     * bac37@drexel.edu
+     * CS338:GUI, Assignment [P3]
+     */
 
 package root;
 
@@ -17,9 +18,9 @@ import javax.swing.SpinnerDateModel;
 import javax.swing.event.CellEditorListener;
 import javax.swing.table.TableCellEditor;
 
-/**
- *
- * @author Letty
+/*
+ * Manages the editing for any time-based editing in the AlarmClockTable. Makes
+ * sure we get a time spinner.
  */
 public class DateSpinnerCellEditor extends AbstractCellEditor implements TableCellEditor{
     private JSpinner timespinner;

@@ -1,7 +1,8 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
+    /*
+     * Bjorn Carandang
+     * bac37@drexel.edu
+     * CS338:GUI, Assignment [P3]
+     */
 
 package root;
 
@@ -11,9 +12,9 @@ import javax.swing.JComboBox;
 import javax.swing.JTable;
 import javax.swing.table.TableCellEditor;
 
-/**
- *
- * @author Letty
+/*
+ * Represents the JComboBox containing the valid moongate types given the
+ * Properties file for the AlarmClockTable.
  */
 public class MoongateCellEditor extends AbstractCellEditor implements TableCellEditor{
 

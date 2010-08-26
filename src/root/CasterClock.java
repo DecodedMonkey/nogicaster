@@ -1,8 +1,16 @@
 package root;
 
+    /*
+     * Bjorn Carandang
+     * bac37@drexel.edu
+     * CS338:GUI, Assignment [P3]
+     */
+
+
 /*
- * Class manages all of the actual time shenanigans.
- * Does not do any tomfoolery for Mabi time just yet.
+ * Class manages all of the time shenanigans, Erinn or otherwise.
+ * Is able to be pinged repeatedly, which makes it suitable
+ * for real-time clocks, unlike the CasterDataModel.
  * 
  * We refer to "IRL time" as the local time of the user.
  * We refer to "server time" as PST/PDT, depending on DST.
@@ -61,6 +69,12 @@ public class CasterClock {
 		}
 	}
 
+        /*
+         * Usually, Mabinogi's own clock has a few Erinn minutes of drift
+         * since they're kind of sloppy with their weekly maintenances when
+         * it comes to getting their clocks back on synch. One can define
+         * an offset to bring us back on track.
+         */
         public long getOffsetTime()
     {
             return getServerTime() + offset * CstStatic.ERINN_MINUTE;

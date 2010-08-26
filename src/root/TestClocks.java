@@ -1,7 +1,8 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
+    /*
+     * Bjorn Carandang
+     * bac37@drexel.edu
+     * CS338:GUI, Assignment [P3]
+     */
 
 /*
  * BasicClock.java
@@ -15,9 +16,9 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import javax.swing.Timer;
 
-/**
- *
- * @author Letty
+/*
+ * Some testbench clock that I made up in my spare time. I guess I'll just leave
+ * it here for posterity.
  */
 public class TestClocks extends javax.swing.JFrame {
 
