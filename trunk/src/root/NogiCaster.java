@@ -1,7 +1,8 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
+    /*
+     * Bjorn Carandang
+     * bac37@drexel.edu
+     * CS338:GUI, Assignment [P3]
+     */
 
 package root;
 
@@ -17,9 +18,9 @@ import java.util.logging.Logger;
 import javax.swing.JFrame;
 import root.TestClocks.TickAction;
 
-/**
- *
- * @author Letty
+/*
+ * Main class. Reads up the properties file, prepares a Properties file, then
+ * starts up the Caster.
  */
 public class NogiCaster {
 

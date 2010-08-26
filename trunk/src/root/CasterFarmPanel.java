@@ -1,7 +1,8 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
+    /*
+     * Bjorn Carandang
+     * bac37@drexel.edu
+     * CS338:GUI, Assignment [P3]
+     */
 
 /*
  * CasterFarmPanel.java
@@ -49,7 +50,7 @@ public class CasterFarmPanel extends javax.swing.JPanel {
         BugSpinner = new javax.swing.JSpinner(new SpinnerNumberModel(0, 0, 100, 1));
         jLabel4 = new javax.swing.JLabel();
         ResultField = new javax.swing.JTextField();
-        jButton1 = new javax.swing.JButton();
+        ExecuteCalculationsButton = new javax.swing.JButton();
 
         setLayout(new java.awt.GridLayout(6, 2));
 
@@ -102,25 +103,17 @@ public class CasterFarmPanel extends javax.swing.JPanel {
         ResultField.setMaximumSize(new java.awt.Dimension(500, 13));
         add(ResultField);
 
-        jButton1.setText("Calculate");
-        jButton1.addActionListener(new java.awt.event.ActionListener() {
+        ExecuteCalculationsButton.setText("Calculate");
+        ExecuteCalculationsButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton1ActionPerformed(evt);
+                ExecuteCalculationsButtonActionPerformed(evt);
             }
         });
-        add(jButton1);
+        add(ExecuteCalculationsButton);
     }// </editor-fold>//GEN-END:initComponents
 
     private void WaterSpinnerKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_WaterSpinnerKeyPressed
-        System.out.println("I came");
-        int key = evt.getKeyCode();
-         if(key == KeyEvent.VK_ENTER)
-         {
-             ResultField.setText(this.CDM.GetFarmAction((Integer) this.WaterSpinner.getValue(),
-                     (Integer) this.FertilizerSpinner.getValue(),
-                     (Integer) this.BugSpinner.getValue(),
-                     (String) this.CropComboBox.getSelectedItem()));
-         }
+
     }//GEN-LAST:event_WaterSpinnerKeyPressed
 
     private void WaterSpinnerKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_WaterSpinnerKeyTyped
@@ -131,22 +124,27 @@ public class CasterFarmPanel extends javax.swing.JPanel {
     
     }//GEN-LAST:event_WaterSpinnerFocusGained
 
-    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
+    /*
+     * Runs the calculations for recommended actions for a field. Will output
+     * one of three actions given a farm's current state (crop type, fert,
+     * water, and bug infestation.
+     */
+    private void ExecuteCalculationsButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ExecuteCalculationsButtonActionPerformed
                      ResultField.setText(this.CDM.GetFarmAction((Integer) this.WaterSpinner.getValue(),
                      (Integer) this.FertilizerSpinner.getValue(),
                      (Integer) this.BugSpinner.getValue(),
                      (String) this.CropComboBox.getSelectedItem()));
-    }//GEN-LAST:event_jButton1ActionPerformed
+    }//GEN-LAST:event_ExecuteCalculationsButtonActionPerformed
 
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JSpinner BugSpinner;
     private javax.swing.JComboBox CropComboBox;
+    private javax.swing.JButton ExecuteCalculationsButton;
     private javax.swing.JSpinner FertilizerSpinner;
     private javax.swing.JTextField ResultField;
     private javax.swing.JSpinner WaterSpinner;
-    private javax.swing.JButton jButton1;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;

@@ -1,16 +1,17 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
-
+    /*
+     * Bjorn Carandang
+     * bac37@drexel.edu
+     * CS338:GUI, Assignment [P3]
+     */
 package root;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 
-/**
+/*
  *
- * @author Letty
+ * Holds constants for various time frames, and also handles string parsing
+ * when data comes out of a Properties file.
  */
 public class CstStatic { 
 
@@ -25,6 +26,11 @@ public class CstStatic {
 
         public static final long serverOffset = -8 * 60 * 60 * 1000; //GMT -8, PST
 	public static final long dstOffset = (60 * 1000 * 60); //For PDT
+
+        /*
+         * ParseXArray turns whatever arrays of strings we get from reading a Properties file
+         * into an ArrayList to do whatever we feel like with (usually turn into a T[]).
+         */
 
         public static ArrayList<String> parseStrArray(String str)
         {

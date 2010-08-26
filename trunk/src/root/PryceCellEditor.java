@@ -1,7 +1,8 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
+    /*
+     * Bjorn Carandang
+     * bac37@drexel.edu
+     * CS338:GUI, Assignment [P3]
+     */
 
 package root;
 
@@ -11,9 +12,8 @@ import javax.swing.JComboBox;
 import javax.swing.JTable;
 import javax.swing.table.TableCellEditor;
 
-/**
- *
- * @author Letty
+/*
+ * Takes a JComboBox containing legal Pryce locations, and offers it as a CellEditor.
  */
 public class PryceCellEditor extends AbstractCellEditor implements TableCellEditor{
 
